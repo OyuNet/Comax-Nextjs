@@ -15,6 +15,9 @@ export default function Home() {
   const [username, setUsername] = React.useState("");
   const [password, setPassword] = React.useState("");
 
+  const [regUsername, setRegUsername] = React.useState("");
+  const [regPassword, setRegPassword] = React.useState("");
+
   return (
     <main>
       <Header 
@@ -26,6 +29,10 @@ export default function Home() {
           isAccVisible={isAccOpen}
           setIsAccOpen={() => {isAccOpen ? setIsAccOpen(false) : setIsAccOpen(true); console.log(isAccOpen)}}
           clickLogin={async () => {
+            if (password.length < 8) {
+              return console.log("Pass length must be higher than 7.")
+            }
+
             const res = await axios.get("http://localhost:8000/auth", { params: { username: `${username}`, password: `${password}` }})
             const status = res.status;
 
@@ -38,7 +45,14 @@ export default function Home() {
         <RegisterBox 
           isRegVisible={isRegOpen}
           setIsRegOpen={() => {setIsRegOpen(false)}}
-          clickRegister={() => {/* Register Things */}}
+          clickRegister={async () => {
+            const res = await axios.get("http://localhost:8000/register", { params: { username: `${regUsername}`, password: `${regPassword}` }})
+            const status = res.status;
+
+            status ? router.push('/') : console.log("Registration failed.")
+          }}
+          watchUsername={(event) => {setRegUsername(event.target.value)}}
+          watchPassword={(event) => {setRegPassword(event.target.value)}}
         />
       </div>
     </main>
