@@ -2,7 +2,7 @@ import { ArrowBack } from "@mui/icons-material";
 import { Button, Paper, TextField } from "@mui/material";
 import React from "react";
 
-export default function LoginBox({ isAccVisible, setIsAccOpen, clickLogin, clickToRegister }) {
+export default function LoginBox({ isAccVisible, setIsAccOpen, clickLogin, clickToRegister, watchUsername, watchPassword }) {
 
     return(
         <div>
@@ -16,8 +16,8 @@ export default function LoginBox({ isAccVisible, setIsAccOpen, clickLogin, click
                     </div>
 
                     <div class="m-4 grid grid-cols-1 gap-2 justify-center">
-                        <TextField label="Kullanıcı Adınız" required type="username"/>
-                        <TextField label="Şifreniz" required type="password"/>
+                        <TextField label="Kullanıcı Adınız" required type="username" onChange={watchUsername}/>
+                        <TextField label="Şifreniz" required type="password" onChange={watchPassword}/>
                         <Button variant="outlined" style={{ margin: "0px 75px" }} onClick={clickLogin}>Giriş Yap</Button>
 
                         <p class="text-center" onClick={clickToRegister}>Kayıtlı değil misin?</p>
