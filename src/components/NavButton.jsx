@@ -11,7 +11,7 @@ export default function NavButton({name, slug, icon}) {
     }
 
     return(
-        <button class="flex justify-center bg-gray-100 p-3 rounded-lg gap-1" onClick={route}>
+        <button className="flex justify-center bg-gray-100 p-3 rounded-lg gap-1" onClick={route}>
             {icon}
             <p>{name}</p>
         </button>

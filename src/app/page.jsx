@@ -18,13 +18,20 @@ export default function Home() {
   const [regUsername, setRegUsername] = React.useState("");
   const [regPassword, setRegPassword] = React.useState("");
 
+  const [menuOpen, setMenuOpen] = React.useState(false);
+
   return (
     <main>
       <Header 
-        setIsAccOpen={() => {isAccOpen ? setIsAccOpen(false) : setIsAccOpen(true); console.log(isAccOpen)}}
+        setIsAccOpen={() => {
+          menuOpen ? setMenuOpen(false) : setMenuOpen(true)
+          isRegOpen ? setIsRegOpen(false) : null;
+          isAccOpen ? setIsAccOpen(false) : null;
+        }}
+        menuOpen={menuOpen}
       />
       <Divider />
-      <div class="flex justify-center">
+      <div className="flex justify-center">
         <LoginBox
           isAccVisible={isAccOpen}
           setIsAccOpen={() => {isAccOpen ? setIsAccOpen(false) : setIsAccOpen(true); console.log(isAccOpen)}}
@@ -36,7 +43,7 @@ export default function Home() {
             const res = await axios.get("http://localhost:8000/auth", { params: { username: `${username}`, password: `${password}` }})
             const status = res.status;
 
-            status ? router.push("/dashboard") : console.log("Auth failed.")
+            status===200 ? localStorage.setItem("username", username) && localStorage.setItem("password", password) && router.push("/dashboard") : console.log("Auth failed.")
           }}
           clickToRegister={() => {setIsAccOpen(false); setIsRegOpen(true)}}
           watchUsername={(event) => {setUsername(event.target.value)}}
@@ -49,7 +56,7 @@ export default function Home() {
             const res = await axios.get("http://localhost:8000/register", { params: { username: `${regUsername}`, password: `${regPassword}` }})
             const status = res.status;
 
-            status ? router.push('/') : console.log("Registration failed.")
+            status===200 ? setIsRegOpen(false) && setIsAccOpen(true) : console.log("Registration failed.")
           }}
           watchUsername={(event) => {setRegUsername(event.target.value)}}
           watchPassword={(event) => {setRegPassword(event.target.value)}}
