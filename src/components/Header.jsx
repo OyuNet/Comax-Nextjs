@@ -2,16 +2,20 @@
 import React, { useEffect } from "react";
 import NavButton from "./NavButton";
 import { AccountCircle, Home, Info, Work } from "@mui/icons-material";
-import { Menu, MenuItem } from "@mui/material";
+import { Menu, MenuItem, TextField } from "@mui/material";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 
-async function check(isAuth, username, password) { // reakti yedim
+async function check(username, password) { // reakti yedim
     const res = (await axios.get("http://localhost:8000/auth", { params: { username: username, password: password }}));
 
     const status = res.data["status"];
 
-    isAuth = status === "ok" ? true : false;
+    if (status === "ok") {
+        return true;
+    } else {
+        return false;
+    }
 }
 
 export default function Header({setIsAccOpen, setIsRegOpen, menu, username, password, open}) {
@@ -24,28 +28,18 @@ export default function Header({setIsAccOpen, setIsRegOpen, menu, username, pass
     const logout = () => {
         localStorage.removeItem("username")
         localStorage.removeItem("password")
+        const router = useRouter();
+        router.push("/")
     }
 
-    let isAuth;
-
-    check(isAuth, username, password);
+    const isAuth = check(username, password);
 
     let content;
 
     if (isAuth) {
-        content = (
-            <>
-                <MenuItem onClick={routeDash}>Panel</MenuItem>
-                <MenuItem onClick={logout}>Çıkış yap</MenuItem>
-            </>
-        )
+        content = [(<MenuItem key="panel" onClick={routeDash}>Panel</MenuItem>), (<MenuItem key="logout" onClick={logout}>Çıkış yap</MenuItem>)]                
     } else {
-        content = (
-            <>
-                <MenuItem onClick={setIsAccOpen}>Giriş yap</MenuItem>
-                <MenuItem onClick={setIsRegOpen}>Kayıt ol</MenuItem>
-            </>
-        )
+        content = [(<MenuItem key="login" onClick={setIsAccOpen}>Giriş yap</MenuItem>), (<MenuItem key="register" onClick={setIsRegOpen}>Kayıt ol</MenuItem>)]
     }
 
     return(
@@ -75,13 +69,11 @@ export default function Header({setIsAccOpen, setIsRegOpen, menu, username, pass
                 <button onClick={menu}>
                     <AccountCircle />
                 </button>
-                <div className="flex justify-end">
-                    <Menu
-                        open={open}
-                    >
-                        {content}
+                    <Menu key="menu" open={open}>
+                        {content.map((x) => {
+                            return x;
+                        })}
                     </Menu>
-                </div>
             </div>
             
         </div>

@@ -6,6 +6,7 @@ import Header from "@/components/Header";
 import { Divider } from "@mui/material";
 import LoginBox from "@/components/LoginBox";
 import RegisterBox from "@/components/RegisterBox";
+import { useRouter } from "next/navigation";
 
 async function checkUser(username, password, setAuth) {
     const res = await axios.get("http://localhost:8000/auth", { params: { username: username, password: password }})
@@ -20,6 +21,8 @@ async function checkUser(username, password, setAuth) {
 
 export default function Page() {
 
+    const router = useRouter()
+
     const username = localStorage.getItem("username")
     const password = localStorage.getItem("password")
 
@@ -27,6 +30,11 @@ export default function Page() {
     const [menuStatus, setMenuStatus] = React.useState(false);
     const [isAccOpen, setIsAccOpen] = React.useState(false);
     const [isRegOpen, setIsRegOpen] = React.useState(false);
+
+    const [uusername, setUsername] = React.useState("");
+    const [ppassword, setPassword] = React.useState("");
+    const [regUsername, setRegUsername] = React.useState("");
+    const [regPassword, setRegPassword] = React.useState("");
 
     checkUser(username, password, setAuth);
 
@@ -61,14 +69,14 @@ export default function Page() {
                         return console.error("Pass length must be higher than 7.")
                         }
 
-                        const res = await axios.get("http://localhost:8000/auth", { params: { username: `${username}`, password: `${password}` }})
+                        const res = await axios.get("http://localhost:8000/auth", { params: { username: `${uusername}`, password: `${ppassword}` }})
                         const data = res.data;
 
                         const status = data["status"]
 
                         if (status === "ok") {
-                        localStorage.setItem("username", username)
-                        localStorage.setItem("password", password)
+                        localStorage.setItem("username", uusername)
+                        localStorage.setItem("password", ppassword)
                         router.push("/dashboard")
                         } else {
                         console.error("Auth error.")
@@ -93,7 +101,7 @@ export default function Page() {
                     watchPassword={(event) => {setRegPassword(event.target.value)}}
                     />
                 </div>
-                <div>Hoş Geldin {username}</div>
+                <div className="">Hoş Geldin {username}</div>
             </main>
         )
     } else {
