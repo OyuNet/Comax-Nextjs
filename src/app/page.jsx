@@ -18,7 +18,7 @@ export default function Home() {
   const [regUsername, setRegUsername] = React.useState("");
   const [regPassword, setRegPassword] = React.useState("");
 
-  const [menuOpen, setMenuOpen] = React.useState(false);
+  const [menuStatus, setMenuStatus] = React.useState(false);
 
   return (
     <main>
@@ -28,7 +28,10 @@ export default function Home() {
           isRegOpen ? setIsRegOpen(false) : null;
           isAccOpen ? setIsAccOpen(false) : null;
         }}
-        menuOpen={menuOpen}
+        menu={() => {
+          menuStatus ? setMenuStatus(false) : setMenuStatus(true)
+        }}
+        open={menuStatus}
       />
       <Divider />
       <div className="flex justify-center">

@@ -5,7 +5,7 @@ import { AccountCircle, Home, Info, Work } from "@mui/icons-material";
 import { Menu, MenuItem } from "@mui/material";
 import axios from "axios";
 
-export default function Header({setIsAccOpen, menuOpen, username, password}) {
+export default function Header({setIsAccOpen, menu, username, password, open}) {
 
     const logout = () => {
         localStorage.removeItem("username")
@@ -25,7 +25,17 @@ export default function Header({setIsAccOpen, menuOpen, username, password}) {
 
     if (isAuth) {
         content = (
-            <MenuItem></MenuItem>
+            <Menu>
+                <MenuItem>Panel</MenuItem>
+                <MenuItem onClick={logout}>Çıkış yap</MenuItem>
+            </Menu>
+        )
+    } else {
+        content = (
+            <>
+                <MenuItem>Giriş yap</MenuItem>
+                <MenuItem>Kayıt ol</MenuItem>
+            </>
         )
     }
 
@@ -53,14 +63,16 @@ export default function Header({setIsAccOpen, menuOpen, username, password}) {
             </div>
 
             <div className="self-center">
-                <button onClick={setIsAccOpen}>
+                <button onClick={menu}>
                     <AccountCircle />
                 </button>
-                <Menu
-                    open={menuOpen}
-                >
-                    {}
-                </Menu>
+                <div className="flex justify-end">
+                    <Menu
+                        open={open}
+                    >
+                        {content}
+                    </Menu>
+                </div>
             </div>
             
         </div>
