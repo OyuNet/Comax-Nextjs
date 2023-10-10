@@ -45,13 +45,21 @@ export default function Home() {
           setIsAccOpen={() => {isAccOpen ? setIsAccOpen(false) : setIsAccOpen(true); console.log(isAccOpen)}}
           clickLogin={async () => {
             if (password.length < 8) {
-              return console.log("Pass length must be higher than 7.")
+              return console.error("Pass length must be higher than 7.")
             }
 
             const res = await axios.get("http://localhost:8000/auth", { params: { username: `${username}`, password: `${password}` }})
-            const status = res.status;
+            const data = res.data;
 
-            status===200 ? localStorage.setItem("username", username) && localStorage.setItem("password", password) && router.push("/dashboard") : console.log("Auth failed.")
+            const status = data["status"]
+
+            if (status === "ok") {
+              localStorage.setItem("username", username)
+              localStorage.setItem("password", password)
+              router.push("/dashboard")
+            } else {
+              console.error("Auth error.")
+            }
           }}
           clickToRegister={() => {setIsAccOpen(false); setIsRegOpen(true)}}
           watchUsername={(event) => {setUsername(event.target.value)}}
@@ -61,10 +69,12 @@ export default function Home() {
           isRegVisible={isRegOpen}
           setIsRegOpen={() => {setIsRegOpen(false)}}
           clickRegister={async () => {
-            const res = await axios.get("http://localhost:8000/register", { params: { username: `${regUsername}`, password: `${regPassword}` }})
-            const status = res.status;
+            const res = await axios.get("http://localhost:8000/register", { params: { username: `${regUsername}`, password: `${regPassword}` }});
+            const data = res.data;
 
-            status===200 ? setIsRegOpen(false) && setIsAccOpen(true) : console.log("Registration failed.")
+            const status = data["status"]
+
+            status==="ok" ? setIsRegOpen(false) && setIsAccOpen(true) : console.log("Registration failed.");
           }}
           watchUsername={(event) => {setRegUsername(event.target.value)}}
           watchPassword={(event) => {setRegPassword(event.target.value)}}

@@ -7,11 +7,11 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 
 async function check(isAuth, username, password) { // reakti yedim
-    const status = await (await axios.get("/auth", { params: { username: username, password: password }})).status.catch((err) => {
-        console.error(err)
-    })
+    const res = (await axios.get("http://localhost:8000/auth", { params: { username: username, password: password }}));
 
-    isAuth = status === 200 ? true : false;
+    const status = res.data["status"];
+
+    isAuth = status === "ok" ? true : false;
 }
 
 export default function Header({setIsAccOpen, setIsRegOpen, menu, username, password, open}) {
