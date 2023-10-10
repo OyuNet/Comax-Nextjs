@@ -23,10 +23,15 @@ export default function Home() {
   return (
     <main>
       <Header 
+        setIsRegOpen={() => {
+          if (isAccOpen) { setIsAccOpen(false) }
+          setMenuStatus(false)
+          setIsRegOpen(true)
+        }}
         setIsAccOpen={() => {
-          menuOpen ? setMenuOpen(false) : setMenuOpen(true)
-          isRegOpen ? setIsRegOpen(false) : null;
-          isAccOpen ? setIsAccOpen(false) : null;
+          if (isRegOpen) { setIsRegOpen(false) }
+          setMenuStatus(false)
+          setIsAccOpen(true)
         }}
         menu={() => {
           menuStatus ? setMenuStatus(false) : setMenuStatus(true)

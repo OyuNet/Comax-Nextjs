@@ -1,40 +1,49 @@
 "use client"
-import React from "react";
+import React, { useEffect } from "react";
 import NavButton from "./NavButton";
 import { AccountCircle, Home, Info, Work } from "@mui/icons-material";
 import { Menu, MenuItem } from "@mui/material";
 import axios from "axios";
+import { useRouter } from "next/navigation";
 
-export default function Header({setIsAccOpen, menu, username, password, open}) {
+async function check(isAuth, username, password) { // reakti yedim
+    const status = await (await axios.get("/auth", { params: { username: username, password: password }})).status.catch((err) => {
+        console.error(err)
+    })
+
+    isAuth = status === 200 ? true : false;
+}
+
+export default function Header({setIsAccOpen, setIsRegOpen, menu, username, password, open}) {
+
+    const routeDash = () => {
+        const router = useRouter();
+        router.push("/dashboard")
+    }
 
     const logout = () => {
         localStorage.removeItem("username")
         localStorage.removeItem("password")
     }
 
-    const isAuth = async () => { 
-        const res = await axios.get("/auth", { params: { username: username, password: password }})
-        if (res.status === 200) {
-            return true;
-        } else {
-            return false;
-        }
-    }
+    let isAuth;
+
+    check(isAuth, username, password);
 
     let content;
 
     if (isAuth) {
         content = (
-            <Menu>
-                <MenuItem>Panel</MenuItem>
+            <>
+                <MenuItem onClick={routeDash}>Panel</MenuItem>
                 <MenuItem onClick={logout}>Çıkış yap</MenuItem>
-            </Menu>
+            </>
         )
     } else {
         content = (
             <>
-                <MenuItem>Giriş yap</MenuItem>
-                <MenuItem>Kayıt ol</MenuItem>
+                <MenuItem onClick={setIsAccOpen}>Giriş yap</MenuItem>
+                <MenuItem onClick={setIsRegOpen}>Kayıt ol</MenuItem>
             </>
         )
     }
