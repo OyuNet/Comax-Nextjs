@@ -37,6 +37,14 @@ export default function Home() {
           menuStatus ? setMenuStatus(false) : setMenuStatus(true)
         }}
         open={menuStatus}
+        routeDash={() => {
+          router.push("/dashboard")
+        }}
+        logout={() => {
+            localStorage.removeItem("username")
+            localStorage.removeItem("password")
+            router.refresh();
+        }}
       />
       <Divider />
       <div className="flex justify-center">

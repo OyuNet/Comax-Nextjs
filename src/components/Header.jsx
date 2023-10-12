@@ -18,21 +18,13 @@ async function check(username, password) { // reakti yedim
     }
 }
 
-export default function Header({setIsAccOpen, setIsRegOpen, menu, username, password, open}) {
+export default function Header({setIsAccOpen, setIsRegOpen, menu, username, password, open, routeDash, logout}) {
 
-    const routeDash = () => {
-        const router = useRouter();
-        router.push("/dashboard")
-    }
+    let isAuth;
 
-    const logout = () => {
-        localStorage.removeItem("username")
-        localStorage.removeItem("password")
-        const router = useRouter();
-        router.push("/")
-    }
-
-    const isAuth = check(username, password);
+    useEffect(() => {
+        isAuth = check(username, password)
+    })
 
     let content;
 
