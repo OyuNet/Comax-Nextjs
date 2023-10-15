@@ -23,9 +23,7 @@ async function checkStaff(username, setIsStaff) {
     const res = await axios.get("http://localhost:8000/isStaff", { params: { username: username }})
     const data = res.data
 
-    if (data["status"] === "ok") {
-        setIsStaff(true)
-    }
+    data["status"] === "ok" ? setIsStaff(true) : setIsStaff(false)
 }
 
 export default function Page() {
@@ -52,13 +50,14 @@ export default function Page() {
 
     const [isStaff, setIsStaff] = React.useState(false)
 
+    useEffect(() => {
+        checkStaff(username, setIsStaff)
+    })
+
     checkUser(username, password, setAuth);
 
     if (auth) {
         // Kayıtlı kullanıcıysa sayfa servis edilecek.
-
-
-        checkStaff(username, setIsStaff)
 
         if (isStaff) {
             return (
@@ -166,40 +165,40 @@ export default function Page() {
                         isAccVisible={isAccOpen}
                         setIsAccOpen={() => {isAccOpen ? setIsAccOpen(false) : setIsAccOpen(true); console.log(isAccOpen)}}
                         clickLogin={async () => {
-                            if (password.length < 8) {
-                            return console.error("Pass length must be higher than 7.")
-                            }
-    
-                            const res = await axios.get("http://localhost:8000/auth", { params: { username: `${uusername}`, password: `${ppassword}` }})
-                            const data = res.data;
-    
-                            const status = data["status"]
-    
-                            if (status === "ok") {
-                            localStorage.setItem("username", uusername)
-                            localStorage.setItem("password", ppassword)
-                            router.push("/dashboard")
-                            } else {
-                            console.error("Auth error.")
-                            }
-                        }}
-                        clickToRegister={() => {setIsAccOpen(false); setIsRegOpen(true)}}
-                        watchUsername={(event) => {setUsername(event.target.value)}}
-                        watchPassword={(event) => {setPassword(event.target.value)}}
+                                if (password.length < 8) {
+                                    return console.error("Pass length must be higher than 7.")
+                                }
+        
+                                const res = await axios.get("http://localhost:8000/auth", { params: { username: `${uusername}`, password: `${ppassword}` }})
+                                const data = res.data;
+        
+                                const status = data["status"]
+        
+                                if (status === "ok") {
+                                    localStorage.setItem("username", uusername)
+                                    localStorage.setItem("password", ppassword)
+                                    router.push("/dashboard")
+                                } else {
+                                    console.error("Auth error.")
+                                }
+                            }}
+                            clickToRegister={() => {setIsAccOpen(false); setIsRegOpen(true)}}
+                            watchUsername={(event) => {setUsername(event.target.value)}}
+                            watchPassword={(event) => {setPassword(event.target.value)}}
                         />
                         <RegisterBox 
-                        isRegVisible={isRegOpen}
-                        setIsRegOpen={() => {setIsRegOpen(false)}}
-                        clickRegister={async () => {
-                            const res = await axios.get("http://localhost:8000/register", { params: { username: `${regUsername}`, password: `${regPassword}` }});
-                            const data = res.data;
-    
-                            const status = data["status"]
-    
-                            status==="ok" ? setIsRegOpen(false) && setIsAccOpen(true) : console.log("Registration failed.");
-                        }}
-                        watchUsername={(event) => {setRegUsername(event.target.value)}}
-                        watchPassword={(event) => {setRegPassword(event.target.value)}}
+                            isRegVisible={isRegOpen}
+                            setIsRegOpen={() => {setIsRegOpen(false)}}
+                            clickRegister={async () => {
+                                const res = await axios.get("http://localhost:8000/register", { params: { username: `${regUsername}`, password: `${regPassword}` }});
+                                const data = res.data;
+        
+                                const status = data["status"]
+        
+                                status==="ok" ? setIsRegOpen(false) && setIsAccOpen(true) : console.log("Registration failed.");
+                            }}
+                            watchUsername={(event) => {setRegUsername(event.target.value)}}
+                            watchPassword={(event) => {setRegPassword(event.target.value)}}
                         />
                     </div>
                     <div className="">Hoş Geldin {username}</div>

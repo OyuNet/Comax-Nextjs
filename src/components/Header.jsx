@@ -20,11 +20,7 @@ async function check(username, password) { // reakti yedim
 
 export default function Header({setIsAccOpen, setIsRegOpen, menu, username, password, open, routeDash, logout}) {
 
-    let isAuth;
-
-    useEffect(() => {
-        isAuth = check(username, password)
-    })
+    const isAuth = check(username, password) ? true : false
 
     let content;
 
